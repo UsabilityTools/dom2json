@@ -145,7 +145,11 @@ module.exports = (function() {
 
         if(node && token.attrs) {
             each(token.attrs, function(attrValue, attrName) {
-                node.setAttribute(attrName, attrValue);
+                try {
+                    node.setAttribute(attrName, attrValue);
+                } catch(e) {
+                    console.error('[dom2json] Couldn\'t set attribute "' + attrName + '" to "' + attrValue + '"', e, node);
+                }
             });
         }
 
