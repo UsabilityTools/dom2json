@@ -131,7 +131,12 @@ module.exports = (function() {
 
         if(token.hasOwnProperty('tag')) {
             if((token.type === document.ELEMENT_NODE) || !token.hasOwnProperty('data')) {
-                node = document.createElement(token.tag);
+                try {
+                    node = document.createElement(token.tag);
+                } catch(e) {
+                    node = document.createElement('div');
+                    console.error('[dom2json] Couldn\'t create element "' + token.tag + '", using div instead.', e, token, node);
+                }
             } else if(token.type === document.DOCUMENT_TYPE) {
                 node = document.implementation.createDocumentType(token.tag, token.data[0], token.data[1]);
             }
