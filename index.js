@@ -13,7 +13,7 @@ module.exports = (function() {
      * by passing truthy value as the third argument
      */
 
-    /* filters can be used to prevent including some nodes or attributes in rip
+    /* controllers can be used to prevent including some nodes or attributes in rip
      *  - node - is called for each node, have to return falsy value if node should be omitted or some node to process (ex. the original one)
      *  - attr - is called for each attribute for each node, have to return falsy value if attribute should be omitted
      *           or some other value (ex. the original attr) or new object with fields name and value
@@ -25,8 +25,8 @@ module.exports = (function() {
     var tagKey = 'tag';
     var dataKey = 'data';
 
-    function serialize(node, filters, omitType) {
-        if(!filters || !filters.node || (node = filters.node(node))) {
+    function serialize(node, controllers, omitType) {
+        if(!controllers || !controllers.node || (node = controllers.node(node))) {
             var res = '{';
 
             if(!omitType) {
@@ -49,8 +49,8 @@ module.exports = (function() {
                         for(i = 0, maxi = node.attributes.length; i < maxi; i++) {
                             var attr = node.attributes[i];
 
-                            if(filters && filters.attr) {
-                                attr = filters.attr(attr, node);
+                            if(controllers && controllers.attr) {
+                                attr = controllers.attr(attr, node);
                             }
 
                             if(attr) {
@@ -77,11 +77,11 @@ module.exports = (function() {
                         commaNeeded = true;
                     }
                     var childNodes = node.childNodes;
-                    if (filters && filters.childrenList ) {
-                        childNodes = filters.childrenList(childNodes, node);
+                    if (controllers && controllers.childrenList ) {
+                        childNodes = controllers.childrenList(childNodes, node);
                     }
                     for(i = 0, maxi = childNodes.length; i < maxi; i++) {
-                        var child = serialize(childNodes[i], filters, omitType);
+                        var child = serialize(childNodes[i], controllers, omitType);
 
                         if(child) {
                             if(!children) {
