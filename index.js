@@ -76,9 +76,12 @@ module.exports = (function() {
 
                         commaNeeded = true;
                     }
-
-                    for(i = 0, maxi = node.childNodes.length; i < maxi; i++) {
-                        var child = serialize(node.childNodes[i], filters, omitType);
+                    var childNodes = node.childNodes;
+                    if (filters && filters.childrenList ) {
+                        childNodes = filters.childrenList(childNodes, node);
+                    }
+                    for(i = 0, maxi = childNodes.length; i < maxi; i++) {
+                        var child = serialize(childNodes[i], filters, omitType);
 
                         if(child) {
                             if(!children) {
